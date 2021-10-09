@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon --watch src src/index.js",
     "start": "node src/index.js",
-    "build": "pm2 start src/index.js --name knotehow -i 0",
+    "build": "pm2 start src/index.js --name tnt -i 0",
     "test": "mocha -exit"
   },
   "repository": {

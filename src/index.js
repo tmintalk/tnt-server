@@ -12,6 +12,14 @@ const rootRoutes = require("./routes");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+// TODO: Socket 연결 -> SSL 을 위한 구조 변경 필요
+var server = require("http").createServer(app);
+const io = socketIO(server, {
+  cors: {
+    origin: "*",
+    credentials: true,
+  },
+});
 
 sequelize
   .sync({ force: false })
@@ -46,14 +54,6 @@ app.use((err, req, res, next) => {
   res.status(404).send(err);
 });
 
-// TODO: Socket 연결 -> SSL 을 위한 구조 변경 필요
-var http = require("http").createServer(app);
-const io = socketIO(http, {
-  cors: {
-    origin: "*",
-    credentials: true,
-  },
-});
 io.on("connection", (socket) => {
   console.log("a user connected!");
   socket.on("message", ({ name, message }) => {
@@ -61,8 +61,8 @@ io.on("connection", (socket) => {
   });
 });
 
-http.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Listening on port`, PORT);
 });
 
-module.exports = http;
+module.exports = server;

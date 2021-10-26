@@ -4,7 +4,6 @@ const passport = require("passport");
 const helmet = require("helmet");
 const cors = require("cors");
 const socketIO = require("socket.io");
-var http = require("http").createServer(express);
 
 require("dotenv").config();
 const { sequelize } = require("./models");
@@ -46,7 +45,9 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500);
   res.status(404).send(err);
 });
-// Socket 연결
+
+// TODO: Socket 연결 -> SSL 을 위한 구조 변경 필요
+var http = require("http").createServer(app);
 const io = socketIO(http, {
   cors: {
     origin: "*",
@@ -60,8 +61,8 @@ io.on("connection", (socket) => {
   });
 });
 
-app.listen(PORT, () => {
+http.listen(PORT, () => {
   console.log(`Listening on port`, PORT);
 });
 
-module.exports = app;
+module.exports = http;

@@ -4,6 +4,7 @@ const passport = require("passport");
 const helmet = require("helmet");
 const cors = require("cors");
 const socketIO = require("socket.io");
+const { addUser, removeUser, getUsersInRoom } = require("./chatUsers");
 
 require("dotenv").config();
 const { sequelize } = require("./models");
@@ -17,6 +18,7 @@ var server = require("http").createServer(app);
 const io = socketIO(server, {
   cors: {
     origin: "*",
+    method: ["GET", "POST"],
     credentials: true,
   },
 });
@@ -55,9 +57,26 @@ app.use((err, req, res, next) => {
 });
 
 io.on("connection", (socket) => {
-  console.log("a user connected!");
-  socket.on("message", ({ name, message }) => {
-    io.emit("message", { name, message });
+  console.log(`${socket.id} connected!`);
+
+  //join a conversation room
+  const { roomId } = socket.handshake.query;
+  socket.join(roodId);
+
+  //notify new user join
+  const user = addUser(socket.id, roomId, name, profile);
+  io.in(roomId).emit("user join", user);
+
+  //Listen for new message
+  socket.on("new message", (data) => {
+    io.in(roodId).emit("new message", data);
+  });
+
+  //if someone leave room, disconnect
+  socket.on("disconnect", () => {
+    removeUser(socket.id);
+    io.in(roomId).emit("user leave", user);
+    socket.leave(roomId);
   });
 });
 

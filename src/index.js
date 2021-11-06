@@ -4,7 +4,8 @@ const passport = require("passport");
 const helmet = require("helmet");
 const cors = require("cors");
 const socketIO = require("socket.io");
-const { addUser, removeUser, getUsersInRoom } = require("./chatUsers");
+const { addUser, removeUser } = require("./ChatUsers");
+const { addMessage } = require("./ChatMessages");
 
 require("dotenv").config();
 const { sequelize } = require("./models");
@@ -60,16 +61,26 @@ io.on("connection", (socket) => {
   console.log(`${socket.id} connected!`);
 
   //join a conversation room
-  const { roomId } = socket.handshake.query;
-  socket.join(roodId);
+  const { roomId, name, picture } = socket.handshake.query;
+  console.log("socket data", roomId, name, picture);
+  socket.join(roomId);
 
   //notify new user join
-  const user = addUser(socket.id, roomId, name, profile);
+  const user = addUser(socket.id, roomId, name, picture);
   io.in(roomId).emit("user join", user);
 
   //Listen for new message
   socket.on("new message", (data) => {
-    io.in(roodId).emit("new message", data);
+    const message = addMessage(roomId, data);
+    io.in(roomId).emit("new message", message);
+  });
+
+  // Listen for typing events
+  socket.on("start typing", (data) => {
+    io.in(roomId).emit("start typing", data);
+  });
+  socket.on("stop typing", (data) => {
+    io.in(roomId).emit("stop typing", data);
   });
 
   //if someone leave room, disconnect

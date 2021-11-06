@@ -4,12 +4,13 @@ const { getMessagesInRoom } = require("../ChatMessages");
 
 const router = express.Router();
 
-router.get("/chat/:roomId/users", (req, res) => {
+router.get("/:roomId/users", (req, res) => {
+  console.log(req.params.roomId, "roomId");
   const users = getUsersInRoom(req.params.roomId);
   return res.json({ users });
 });
 
-router.get("/chat/:roomId/messages", (req, res) => {
+router.get("/:roomId/messages", (req, res) => {
   const messages = getMessagesInRoom(req.params.roomId);
   return res.json({ messages });
 });

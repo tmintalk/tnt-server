@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const { User } = require('../models');
+const { User, Post, Answer, Question } = require('../models');
 
 module.exports = {
   join: async (req, res, next) => {
@@ -72,6 +72,20 @@ module.exports = {
   },
 
   me: async (req, res, next) => {
-    res.json(req.user);
+    const user = await User.findOne({
+      where: { id: req.user.id },
+      include: [
+        {
+          model: Post,
+          include: [{ model: User }]
+        },
+        {
+          model: Answer,
+          include: [{ model: Question }]
+        }
+      ]
+    })
+
+    res.json(user);
   }
 }

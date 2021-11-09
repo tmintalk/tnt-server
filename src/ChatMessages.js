@@ -1,6 +1,7 @@
 var uuid = require("uuid");
 
 const messages = [];
+const recentmessages = [];
 
 const addMessage = (room, message) => {
   const msg = { id: uuid.v4(), room, ...message };
@@ -15,8 +16,16 @@ const removeMessage = (id) => {
 };
 
 const getMessage = (id) => messages.find((message) => message.id === id);
-
+const getAllMessages = () => {
+  return messages;
+};
 const getMessagesInRoom = (room) =>
   messages.filter((message) => message.room === room);
 
-module.exports = { addMessage, removeMessage, getMessage, getMessagesInRoom };
+module.exports = {
+  addMessage,
+  removeMessage,
+  getMessage,
+  getAllMessages,
+  getMessagesInRoom,
+};

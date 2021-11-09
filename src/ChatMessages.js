@@ -1,7 +1,6 @@
 var uuid = require("uuid");
 
 const messages = [];
-const recentmessages = [];
 
 const addMessage = (room, message) => {
   const msg = { id: uuid.v4(), room, ...message };

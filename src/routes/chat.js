@@ -6,7 +6,6 @@ const router = express.Router();
 
 router.get("/allMessages", (req, res) => {
   const messages = getAllMessages();
-  console.log(messages);
   return res.json({ messages });
 });
 

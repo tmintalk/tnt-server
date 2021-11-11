@@ -3,13 +3,25 @@ const Sequelize = require('sequelize');
 module.exports = class Post extends Sequelize.Model {
   static init(sequelize) {
     return super.init({
-      title: {
-        type: Sequelize.STRING(40),
-        defaultValue: '',
-      },
-      body: {
+      description: {
         type: Sequelize.TEXT,
         defaultValue: '',
+      },
+      date: {
+        type: Sequelize.DATEONLY,
+        allowNull: true
+      },
+      item: {
+        type: Sequelize.STRING,
+        defaultValue: ''
+      },
+      price: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0
+      },
+      about: {
+        type: Sequelize.STRING,
+        defaultValue: ''
       },
     }, {
       sequelize,

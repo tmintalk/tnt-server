@@ -19,11 +19,15 @@ module.exports = {
   },
   createPost: async (req, res, next) => {
     const user = req.user;
-    const { body } = req.body;
+    const { description, date, item, about, price } = req.body;
 
     try {
       const p = await Post.create({
-        body,
+        description,
+        date,
+        item,
+        about,
+        price,
         UserId: user.id
       });
       

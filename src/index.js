@@ -4,8 +4,8 @@ const passport = require("passport");
 const helmet = require("helmet");
 const cors = require("cors");
 const socketIO = require("socket.io");
-const { addUser, removeUser } = require("./ChatUsers");
-const { addMessage } = require("./ChatMessages");
+const { addUser, removeUser, updateReadCnt } = require("./ChatUsers");
+const { addMessage, getMessagesInRoom } = require("./ChatMessages");
 
 require("dotenv").config();
 const { sequelize } = require("./models");
@@ -86,6 +86,8 @@ io.on("connection", (socket) => {
   //if someone leave room, disconnect
   socket.on("disconnect", () => {
     removeUser(socket.id);
+    const messageCnt = getMessagesInRoom(roomId).length;
+    updateReadCnt(user?.name, roomId, messageCnt);
     io.in(roomId).emit("user leave", user);
     socket.leave(roomId);
   });

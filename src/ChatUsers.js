@@ -1,5 +1,5 @@
 const users = [];
-
+let usersReadCnt = [{ name: "test", roomId: "test", messageCnt: 0 }];
 const addUser = (id, room, name, picture) => {
   const existingUser = users.find(
     (user) => user.room === room && user.name === name
@@ -25,4 +25,44 @@ const getUser = (id) => users.find((user) => user.id === id);
 
 const getUsersInRoom = (room) => users.filter((user) => user.room === room);
 
-module.exports = { addUser, removeUser, getUser, getUsersInRoom };
+const updateReadCnt = (name, roomId, messageCnt) => {
+  if (!name) {
+    console.log("if undefined", name);
+    return;
+  }
+  readInfo = { name: name, roomId: roomId, messageCnt: messageCnt };
+  console.log(
+    name,
+    usersReadCnt.find((u) => {
+      return u.name == name && u.roomId == roomId;
+    })
+  );
+  if (
+    usersReadCnt.find((u) => {
+      return u.name == name && u.roomId == roomId;
+    })
+  ) {
+    console.log("exist");
+    usersReadCnt = usersReadCnt.filter((u) => {
+      return u.name !== name || u.roomId !== roomId;
+    });
+    usersReadCnt.push(readInfo);
+  } else {
+    console.log("no exist");
+    usersReadCnt.push(readInfo);
+  }
+
+  console.log(usersReadCnt);
+};
+const getMyReadCnt = (name) => {
+  return usersReadCnt.filter((u) => u.name === name);
+};
+
+module.exports = {
+  addUser,
+  removeUser,
+  getUser,
+  getUsersInRoom,
+  updateReadCnt,
+  getMyReadCnt,
+};

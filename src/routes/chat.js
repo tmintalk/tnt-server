@@ -1,5 +1,5 @@
 const express = require("express");
-const { getUsersInRoom } = require("../ChatUsers");
+const { getUsersInRoom, getMyReadCnt } = require("../ChatUsers");
 const { getMessagesInRoom, getAllMessages } = require("../ChatMessages");
 
 const router = express.Router();
@@ -18,6 +18,11 @@ router.get("/:roomId/users", (req, res) => {
 router.get("/:roomId/messages", (req, res) => {
   const messages = getMessagesInRoom(req.params.roomId);
   return res.json({ messages });
+});
+
+router.get("/:name/readCnt", (req, res) => {
+  const myReadCnt = getMyReadCnt(req.params.name);
+  return res.json({ myReadCnt });
 });
 
 module.exports = router;

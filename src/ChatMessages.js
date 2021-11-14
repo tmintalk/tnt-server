@@ -18,6 +18,7 @@ const getMessage = (id) => messages.find((message) => message.id === id);
 const getAllMessages = () => {
   return messages;
 };
+
 const getMessagesInRoom = (room) =>
   messages.filter((message) => message.room === room);
 

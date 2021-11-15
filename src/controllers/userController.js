@@ -9,7 +9,6 @@ module.exports = {
   getUser: async (req, res, next) => {
     const { userId } = req.params;
 
-    console.log(userId);
     const user = await User.findOne({
       where: {
         id: userId
@@ -26,7 +25,26 @@ module.exports = {
       ]
     });
 
-    console.log(user);
+    res.json(user);
+  },
+  findUser: async (req, res, next) => {
+    const { nickname } = req.params;
+
+    const user = await User.findOne({
+      where: {
+        nickname: nickname
+      },
+      include: [
+        {
+          model: Post,
+          include: [{ model: User }]
+        },
+        {
+          model: Answer,
+          include: [{ model: Question }]
+        }
+      ]
+    });
 
     res.json(user);
   }

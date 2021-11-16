@@ -72,7 +72,7 @@ module.exports = {
   },
 
   me: async (req, res, next) => {
-    const user = await User.findOne({
+    let user = await User.findOne({
       where: { id: req.user.id },
       include: [
         {
@@ -86,6 +86,13 @@ module.exports = {
       ]
     })
 
+    let sum = 0;
+    user.Posts.map(p => {
+      sum += p.price;
+    })
+
+    user.dataValues.sum = sum;
+    
     res.json(user);
   }
 }

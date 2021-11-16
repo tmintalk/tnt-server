@@ -1,9 +1,9 @@
-const { Post, User } = require("../models");
+const { Post, User, Like } = require("../models");
 
 module.exports = {
   getPosts: async (req, res, next) => {
     try {
-      const posts = await Post.findAll({
+      let posts = await Post.findAll({
         include: [
           { 
             model: User
@@ -11,6 +11,19 @@ module.exports = {
         ],
         order: [ [ 'id', 'DESC' ]],
       });
+
+      posts = await Promise.all(posts.map(async(post) => {
+        let like = await Like.findOne({
+          where: {
+            PostId: post.id,
+            UserId: req.user.id
+          }
+        });
+
+        post.dataValues.like = like;
+
+        return post;
+      }))
 
       res.json(posts);
     } catch (error) {

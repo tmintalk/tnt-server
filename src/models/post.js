@@ -43,5 +43,6 @@ module.exports = class Post extends Sequelize.Model {
     db.Post.belongsTo(db.User);
     db.Post.hasMany(db.Image);
     db.Post.hasMany(db.Comment);
+    db.Post.hasMany(db.Like);
   }
 }

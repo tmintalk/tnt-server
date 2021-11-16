@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const { User, Post, Answer, Question } = require('../models');
+const { User, Post, Answer, Question, Like } = require('../models');
 
 module.exports = {
   join: async (req, res, next) => {
@@ -77,7 +77,10 @@ module.exports = {
       include: [
         {
           model: Post,
-          include: [{ model: User }]
+          include: [
+            { model: User },
+            { model: Like }
+          ]
         },
         {
           model: Answer,
@@ -89,6 +92,11 @@ module.exports = {
     let sum = 0;
     user.Posts.map(p => {
       sum += p.price;
+    })
+
+    user.Posts = user.Posts.map(p => {
+      let count = p.Likes.length;
+      p.dataValues.count = count;
     })
 
     user.dataValues.sum = sum;

@@ -2,7 +2,24 @@ const { User, Post, Question, Answer } = require("../models")
 
 module.exports = {
   getUsers: async (req, res, next) => {
-    const users = await User.findAll();
+    let users = await User.findAll({
+      include: [
+        {
+          model: Post
+        }
+      ]
+    });
+
+    users = users.map(user => {
+      let sum = 0;
+      user.Posts.map(p => {
+        sum += p.price;
+      });
+
+      user.dataValues.sum = sum;
+
+      return user;
+    })
 
     res.json(users);
   },

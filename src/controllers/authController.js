@@ -77,6 +77,7 @@ module.exports = {
       include: [
         {
           model: Post,
+          order: [ [ 'id', 'DESC' ]],
           include: [
             { model: User },
             { model: Like }

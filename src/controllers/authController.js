@@ -80,7 +80,12 @@ module.exports = {
           order: [ [ 'id', 'DESC' ]],
           include: [
             { model: User },
-            { model: Like }
+            { 
+              model: Like,
+              include: [
+                { model: User }
+              ]
+            }
           ]
         },
         {
